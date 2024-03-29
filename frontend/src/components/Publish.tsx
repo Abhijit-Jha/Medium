@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import AppBar from "./AppBar";
+import  { ChangeEvent, useState } from "react";
+// import AppBar from "./AppBar";
 import Publishbar from "./Publishbar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -10,11 +10,11 @@ const Publish = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  function handleTitle(e) {
+  function handleTitle(e :ChangeEvent<HTMLInputElement>) {
     setTitle(e.target.value);
   }
 
-  function handleContent(e) {
+  function handleContent(e:ChangeEvent<HTMLTextAreaElement>) {
     setContent(e.target.value);
   }
 
