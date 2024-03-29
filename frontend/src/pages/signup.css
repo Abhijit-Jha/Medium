@@ -1,0 +1,15 @@
+.ipbox {
+    border: 1px solid slategrey;
+    padding: 8px;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.ipbox:hover {
+    border: 2px solid slategrey;
+}
+
+.ipbox:focus{
+    background-color: rgb(234, 223, 223);
+    color: black;
+}

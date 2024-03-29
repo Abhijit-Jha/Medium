@@ -15,44 +15,48 @@ const blogRoute = new Hono<{
 }>();
 blogRoute.use('/*', async (c, next) => {
     const jwt = c.req.header('Authorization');
-    // console.log(jwt)
     if (!jwt) {
         c.status(401);
         return c.json({ error: "unauthorized" });
     }
     const token = jwt.split(' ')[1];
 
-    console.log(token)
     try {
         const payload = await verify(token, "MYSECRETPASSWORD");
-        console.log(payload)
         if (!payload) {
             c.status(401);
             return c.json({ error: "unauthorized" });
         }
         c.set('userId', payload.id);
-        // const a=c.get("userId")
-        // console.log(a)
-        await next()
-    } catch (E) {
+        await next();     } catch (E) {
         console.log(E)
         c.status(500)
         c.json({
             "message": "Internal Server Error"
         })
     }
-})
+});
 
-blogRoute.get('/get/:id', async (c) => {
-    const id = c.req.param('id')
+
+blogRoute.get('get/:id', async (c) => {
+    const id = c.req.param('id');
     const userId = c.get('userId');
     const prisma = new PrismaClient({
         datasourceUrl: c.env?.DATABASE_URL,
     }).$extends(withAccelerate());
-    const data = await prisma.post.findUnique({
+    const data = await prisma.post.findFirst({
         where: {
-            id: id,
-            authorID: userId
+            id: id
+        },select:{
+            id:true,
+            title:true,
+            content:true,
+            createdAt:true,
+            author:{
+                select:{
+                    name:true
+                }
+            }
         }
     })
     console.log(id);
@@ -114,20 +118,71 @@ blogRoute.put('/edit-post', async (c) => {
 })
 
 blogRoute.get("/bulk", async (c) => {
-    const prisma = new PrismaClient({
-        datasourceUrl: c.env?.DATABASE_URL,
-    }).$extends(withAccelerate());
-
     try {
-        const data = await prisma.post.findMany();
-        return c.json({ data });
+        const prisma = new PrismaClient({
+            datasourceUrl: c.env?.DATABASE_URL,
+        }).$extends(withAccelerate());
+        
+        const data = await prisma.post.findMany({
+            select:{
+                title:true,
+                id:true,
+                content:true,
+                createdAt:true,
+                author:{
+                    select:{
+                        name:true
+                    }
+                }
+            }
+        })
+        console.log(data)
+        return c.json({ "data" : data });
     } catch (error) {
-        // Handle any potential errors
+        
         console.error("Error fetching data:", error);
         c.status(403)
         return c.json({ error: "Internal Server Error" });
     }
 });
+
+
+
+blogRoute.delete("/delete-post", async (c) => {
+    try {
+        const payload = await c.req.json();
+
+
+        if (!payload || !payload.id) {
+            c.status(400);
+            return c.json({ error: "Invalid payload" });
+        }
+
+        const prisma = new PrismaClient({
+            datasourceUrl: c.env?.DATABASE_URL,
+        }).$extends(withAccelerate());
+        console.log("HII")
+        const deletedPost = await prisma.post.delete({
+            where: { id: payload.id }
+        });
+        console.log("HII")
+
+        
+        if (!deletedPost) {
+            c.status(404);
+            return c.json({ error: "Post not found" });
+        }
+
+        
+        return c.json({ message: "Post deleted successfully", deletedPost });
+    } catch (error) {
+        
+        console.error("Error deleting post:", error);
+        c.status(500);
+        return c.json({ error: "Internal Server Error" });
+    }
+});
+
 
 
 export default blogRoute

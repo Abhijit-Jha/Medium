@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import userRoute from '../routes/user';
 import blogRoute from '../routes/blogs';
+import { cors } from 'hono/cors'
 
 // Create the main Hono app
 const app = new Hono<{
@@ -13,7 +14,7 @@ const app = new Hono<{
 	}
 }>();
 
-
+app.use('/api/*', cors())
 app.route("/api/v1/user",userRoute)
 app.route("/api/v1/blog",blogRoute)
 

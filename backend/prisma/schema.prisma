@@ -16,7 +16,7 @@ model User{
   id String @id @default(uuid())
   email String @unique
   password String 
-  name String?
+  name String? @default("No name")
   post Post[]
 }
 

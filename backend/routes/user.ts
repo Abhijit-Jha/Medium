@@ -76,7 +76,8 @@ userRoute.post('/signin', async (c) => {
 			})
 		}
 		return c.json({
-			"User" :user
+			"User" :user,
+			"message" : "Done"
 		})
 		
 	}catch(e){
