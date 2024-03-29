@@ -1,5 +1,5 @@
 import Publish from "../components/Publish"
-import Publishbar from "../components/Publishbar"
+
 
 
 const PostBlog = () => {

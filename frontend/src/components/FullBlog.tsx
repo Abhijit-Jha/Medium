@@ -1,11 +1,9 @@
-import React from 'react'
 import AppBar, { Avatar } from './AppBar'
 import { BlogInterface } from '../hooks'
-import { useParams } from 'react-router-dom'
-import { useSpecificBlog } from '../hooks'
+
 
 const FullBlog = ({blog}:{blog:BlogInterface}) => {
-    const {id} = useParams()
+    
 
     return (
         <div>
