@@ -27,7 +27,7 @@ blogRoute.use('/*', async (c, next) => {
             c.status(401);
             return c.json({ error: "unauthorized" });
         }
-        c.set('userId', payload.id);
+        // c.set('userId', payload.id);
         await next();     } catch (E) {
         console.log(E)
         c.status(500)

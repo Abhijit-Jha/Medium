@@ -12,6 +12,7 @@ const userRoute = new Hono<{
 		userId:string
 	}
 }>();
+
 userRoute.post('/signup', async (c) => {
 	console.log(c.env.JWT_SECRET)
 	const prisma = new PrismaClient({

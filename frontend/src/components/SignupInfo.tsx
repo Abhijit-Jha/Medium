@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { SignupType } from '@abhijit-jha/medium-common'
 import axios from 'axios'
-
+// const URL = "https://backend.abhijeetjha913.workers.dev"
 const Information = () => {
     const navigate = useNavigate()
     const [inputs,setInputs] = useState<SignupType>({
